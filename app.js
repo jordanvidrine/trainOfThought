@@ -6,6 +6,7 @@ const SquareSize = 10;
 var state = {
   grid: [],
   clearIntervalId: undefined,
+  currentIndex: undefined,
   previousIndex: undefined,
 }
 
@@ -33,7 +34,7 @@ function buildGrid() {
 function startThought() {
   let middle = Math.floor(GridSize/2)
   state.grid[middle][middle] === 0 ? state.grid[middle][middle] = 1 : state.grid[middle][middle] = 0;
-  state.previousIndex = {x:middle, y: middle}
+  state.currentIndex = {x:middle, y: middle}
 
   document.body.removeChild(table)
   table = document.createElement('table')
@@ -43,5 +44,31 @@ function startThought() {
 }
 
 function continueThought() {
+  // starting from the last index, decide where to go next, as long as it isnt the previous index
+  let curX = state.currentIndex.x
+  let curY = state.currentIndex.y
+  let choices = [
+    {x:curX + 1, y:curY}, // go right
+    {x:curX - 1, y:curY}, // go left
+    {x: curX, y: curY + 1}, // go down
+    {x: curX, y: curY - 1}, // go up
+  ]
 
+  state.previousIndex = state.currentIndex;
+
+  decision = choices[Math.floor(Math.random()*4)]
+
+  if (decision.x >= 0 && decision.x <= GridSize - 1 && decision.y >= 0 && decision.y <= GridSize - 1) {
+    state.currentIndex = decision;
+
+    state.grid[state.currentIndex.x][state.currentIndex.y] === 0 ?
+    state.grid[state.currentIndex.x][state.currentIndex.y] = 1 :
+    state.grid[state.currentIndex.x][state.currentIndex.y] = 0
+
+    document.body.removeChild(table)
+    table = document.createElement('table')
+    buildGrid()
+  } else {
+    return false;
+  }
 }
