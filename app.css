@@ -1,0 +1,9 @@
+td {
+  width: 8px;
+  height: 8px;
+  border: 1px solid grey;
+}
+
+td.on {
+  background-color: rgba(123,97,35,0.2)
+}
